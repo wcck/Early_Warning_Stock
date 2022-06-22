@@ -1,4 +1,6 @@
 import twstock
+import serial
+import time
 import os
 
 
@@ -10,6 +12,17 @@ def GetSpecifyStock():
 
 def GetRealTimePrice(stock):
     return stock.get('realtime')['latest_trade_price']
+
+def TransmitDataToSerial(code, latest_trade_price):
+    ser = serial.Serial (port = "/dev/ttyACM0", bytesize = 8, stopbits = 1)
+    ser.baudrate = 115200 
+    sleep_time = 0.05  
+    ser.write('\x41') #240
+    time.sleep(sleep_time)
+    ser.write('\x41') #right value A
+    time.sleep(sleep_time)
+    ser.write('\x41') #right value A
+    ser.close()  
 
 def Run():
     stocks = GetSpecifyStock()
